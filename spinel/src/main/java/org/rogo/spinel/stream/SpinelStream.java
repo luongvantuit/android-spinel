@@ -1,4 +1,4 @@
-package org.rogo.spinel;
+package org.rogo.spinel.stream;
 
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -8,7 +8,7 @@ import android.hardware.usb.UsbManager;
 
 import org.rogo.spinel.interfaces.IStream;
 
-public class SpinelStream implements IStream {
+public class SpinelStream extends IStream {
 
     private final UsbManager usbManager;
     private final UsbDevice usbDevice;
@@ -25,6 +25,7 @@ public class SpinelStream implements IStream {
         this.usbManager = usbManager;
         this.usbDevice = usbDevice;
     }
+
 
     @Override
     public void open() {
@@ -44,6 +45,17 @@ public class SpinelStream implements IStream {
 
     public void write(byte[] buffer, int length, int timeout) {
         this.usbDeviceConnection.bulkTransfer(this.usbEndpoint, buffer, length, timeout);
+    }
+
+
+    @Override
+    public byte[] read() {
+        return new byte[0];
+    }
+
+    @Override
+    public byte readByte() {
+        return 0;
     }
 
     @Override

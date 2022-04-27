@@ -1,4 +1,4 @@
-package org.rogo.spinel;
+package org.rogo.spinel.helpers;
 
 import android.util.Log;
 

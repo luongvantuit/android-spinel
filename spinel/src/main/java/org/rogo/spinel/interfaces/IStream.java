@@ -3,11 +3,25 @@ package org.rogo.spinel.interfaces;
 /**
  * IStream template stream
  */
-public interface IStream {
+public abstract class IStream {
 
-    void open();
+    private boolean isDataAvailable;
 
-    void write(byte[] bytes);
+    public abstract void open();
 
-    void close();
+    public abstract void write(byte[] buffer);
+
+    public abstract byte[] read();
+
+    public abstract byte readByte();
+
+    public abstract void close();
+
+    public boolean getIsDataAvailable() {
+        return isDataAvailable;
+    }
+
+    public void setIsDataAvailable(boolean dataAvailable) {
+        isDataAvailable = dataAvailable;
+    }
 }

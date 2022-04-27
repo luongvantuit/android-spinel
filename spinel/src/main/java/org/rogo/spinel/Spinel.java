@@ -1,7 +1,6 @@
 package org.rogo.spinel;
 
-import android.hardware.usb.UsbDeviceConnection;
-
+import org.rogo.spinel.helpers.SpinelLogger;
 import org.rogo.spinel.interfaces.ILogger;
 import org.rogo.spinel.interfaces.IStream;
 
