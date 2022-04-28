@@ -26,14 +26,14 @@ public class SpinelDecoder {
         frameLength = frameIn.length;
         reset();
 
-        frameHeader = readUint8();
-        frameCommand = readUintPacked();
+        frameHeader = readUInt8();
+        frameCommand = readUIntPacked();
 
         if (frameCommand != SpinelCommands.RSP_PROP_VALUE_IS && frameCommand != SpinelCommands.RSP_PROP_VALUE_INSERTED && frameCommand != SpinelCommands.RSP_PROP_VALUE_REMOVED) {
             throw new RuntimeException();
         }
 
-        framePropertyId = readUintPacked();
+        framePropertyId = readUIntPacked();
     }
 
     public void reset() {
@@ -65,22 +65,27 @@ public class SpinelDecoder {
         return new String(segment);
     }
 
-    public int readUintPacked() {
+    public int readUIntPacked() {
         int valueDecoded = 0;
-        var value_mul = 1;
-        var value_len_max = frameIndex + 4;
+        int valueMul = 1;
+        int valueLenMax = frameIndex + 4;
 
-        while (frameIndex < value_len_max) {
-            var packet = frameBuffer[frameIndex];
+        while (frameIndex < valueLenMax) {
+            int packet;
+            if (frameBuffer[frameIndex] < 0) {
+                packet = frameBuffer[frameIndex] & 0xFF;
+            } else {
+                packet = frameBuffer[frameIndex];
+            }
 
-            valueDecoded += ((packet & 0x7F) * value_mul);
+            valueDecoded += ((packet & 0x7F) * valueMul);
             frameIndex += 2;
 
             if (packet < 0x80) {
                 break;
             }
 
-            value_mul *= 0x80;
+            valueMul *= 0x80;
         }
 
         return valueDecoded;
@@ -92,12 +97,12 @@ public class SpinelDecoder {
     }
 
     public byte[] readDataWithLen() {
-        int aDataLen = readUint16();
+        int aDataLen = readUInt16();
         return readItems(aDataLen);
     }
 
     public boolean readBool() {
-        byte valueToDecode = readUint8();
+        byte valueToDecode = readUInt8();
 
         if (valueToDecode == 0x00) {
             return false;
@@ -108,7 +113,7 @@ public class SpinelDecoder {
         }
     }
 
-    public byte readUint8() {
+    public byte readUInt8() {
         byte decodedValue = frameBuffer[frameIndex];
         frameIndex += 1;
 
@@ -116,28 +121,28 @@ public class SpinelDecoder {
     }
 
     public byte readInt8() {
-        return (byte) readUint8();
+        return (byte) readUInt8();
     }
 
-    public int readUint16() {
-        int aUint16 = (int) (frameBuffer[frameIndex] | (frameBuffer[frameIndex + 1] << 8));
+    public int readUInt16() {
+        int aUInt16 = (int) (frameBuffer[frameIndex] | (frameBuffer[frameIndex + 1] << 8));
         frameIndex += 2;
-        return aUint16;
+        return aUInt16;
     }
 
     public short readInt16() {
-        return (short) readUint16();
+        return (short) readUInt16();
     }
 
-    public long readUint32() {
-        long aUint32 = (long) ((frameBuffer[frameIndex + 3] << 24) | (frameBuffer[frameIndex + 2] << 16) | (frameBuffer[frameIndex + 1] << 8) | frameBuffer[frameIndex]);
+    public long readUInt32() {
+        long aUInt32 = (long) ((frameBuffer[frameIndex + 3] << 24) | (frameBuffer[frameIndex + 2] << 16) | (frameBuffer[frameIndex + 1] << 8) | frameBuffer[frameIndex]);
         frameIndex += 4;
 
-        return aUint32;
+        return aUInt32;
     }
 
     public int readInt32() {
-        return (int) readUint32();
+        return (int) readUInt32();
     }
 
     public SpinelIPv6Address readIp6Address() {
@@ -159,8 +164,8 @@ public class SpinelDecoder {
     }
 
 
-    private Object spinelDatatypeValueUnpack(char spinel_format) {
-        switch (spinel_format) {
+    private Object spinelDatatypeValueUnpack(char spinelFormat) {
+        switch (spinelFormat) {
             case 'b':
                 return readBool();
 
@@ -168,16 +173,16 @@ public class SpinelDecoder {
                 return readInt8();
 
             case 'C':
-                return readUint8();
+                return readUInt8();
 
             case 's':
                 return readInt16();
 
             case 'S':
-                return readUint16();
+                return readUInt16();
 
             case 'L':
-                return readUint32();
+                return readUInt32();
 
             case 'l':
                 return readInt32();
@@ -201,7 +206,7 @@ public class SpinelDecoder {
                 return readDataWithLen();
 
             case 'i':
-                return readUintPacked();
+                return readUIntPacked();
 
             default:
                 throw new RuntimeException("Parsing frame data error.");
@@ -213,7 +218,7 @@ public class SpinelDecoder {
         byte[] tempArray = new byte[SizeToRead];
 
         for (int i = 0; i < SizeToRead; i++) {
-            tempArray[i] = readUint8();
+            tempArray[i] = readUInt8();
         }
 
         return tempArray;
@@ -249,7 +254,7 @@ public class SpinelDecoder {
 
                 int structEnd = getIndexOfEndingBrace(spinelFormat, indexFormat + 1);
                 String structFormat = spinelFormat.substring(indexFormat + 2, structEnd - indexFormat - 2);
-                readUint16();
+                readUInt16();
 
                 result.add(readFields(structFormat));
                 indexFormat = structEnd + 1;

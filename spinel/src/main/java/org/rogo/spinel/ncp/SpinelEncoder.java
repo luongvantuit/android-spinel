@@ -7,6 +7,10 @@ import java.nio.charset.StandardCharsets;
 
 public class SpinelEncoder {
 
+    public SpinelEncoder() {
+
+    }
+
     public static byte[] encodeValue(int propertyValue) {
         return SpinelEncoder.encodeValue(String.valueOf(propertyValue), PropertyFormat.B);
     }
@@ -29,7 +33,7 @@ public class SpinelEncoder {
         if (format == PropertyFormat.S) {
             return SpinelEncoder.encodeInt16(propertyValue);
         } else if (format == PropertyFormat.i) {
-            return SpinelEncoder.encodeUintPacked(propertyValue);
+            return SpinelEncoder.encodeUIntPacked(propertyValue);
         }
         throw new RuntimeException();
     }
@@ -66,14 +70,14 @@ public class SpinelEncoder {
     }
 
     private static byte[] encodeInt16(int propertyValue) {
-        return ByteUtils.intToBytes(propertyValue);
+        return ByteUtils.shortToBytes(propertyValue);
     }
 
-    private static byte[] encodeUintPacked(int valueToEncode) {
-        int encoded_size = SpinelEncoder.packedUintSize(valueToEncode);
-        byte[] tempByte = new byte[encoded_size];
+    private static byte[] encodeUIntPacked(int valueToEncode) {
+        int encodedSize = SpinelEncoder.packedUIntSize(valueToEncode);
+        byte[] tempByte = new byte[encodedSize];
         int index;
-        for (index = 0; index != encoded_size - 1; index++) {
+        for (index = 0; index != encodedSize - 1; index++) {
             tempByte[index] = (byte) ((valueToEncode & 0x7F) | 0x80);
             valueToEncode = valueToEncode >> 7;
         }
@@ -82,7 +86,7 @@ public class SpinelEncoder {
     }
 
 
-    private static int packedUintSize(int value) {
+    private static int packedUIntSize(int value) {
         int ret = 0;
         if (value < (1 << 7)) {
             ret = 1;
