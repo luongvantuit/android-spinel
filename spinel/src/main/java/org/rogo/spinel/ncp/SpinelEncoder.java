@@ -34,6 +34,8 @@ public class SpinelEncoder {
             return SpinelEncoder.encodeInt16(propertyValue);
         } else if (format == PropertyFormat.i) {
             return SpinelEncoder.encodeUIntPacked(propertyValue);
+        } else if (format == PropertyFormat.b) {
+            return SpinelEncoder.encodeValue(String.valueOf(propertyValue), PropertyFormat.B);
         }
         throw new RuntimeException();
     }

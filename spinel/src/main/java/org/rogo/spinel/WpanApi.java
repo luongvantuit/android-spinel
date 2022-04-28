@@ -43,7 +43,6 @@ public class WpanApi {
 
     public int doLastStatus() {
         FrameData frameData = propertyGetValue(SpinelProperties.PROP_LAST_STATUS);
-
         try {
             return (int) frameData.getResponse();
         } catch (Exception e) {
@@ -213,12 +212,7 @@ public class WpanApi {
 
     public boolean doXPanId(byte[] xPanId) {
         FrameData frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_XPANID, xPanId, PropertyFormat.D);
-
-        if (frameData != null && Utilities.byteArrayCompare((byte[]) frameData.getResponse(), xPanId)) {
-            return true;
-        } else {
-            return false;
-        }
+        return frameData != null && Utilities.byteArrayCompare((byte[]) frameData.getResponse(), xPanId);
     }
 
     public SpinelIPv6Address[] doIPAddresses() {
@@ -281,21 +275,15 @@ public class WpanApi {
         }
     }
 
-//    public boolean doInterfaceConfig(boolean interfaceState) {
-//        FrameData frameData;
-//
-//        if (interfaceState) {
-//            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_IF_UP, 1, "b");
-//        } else {
-//            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_IF_UP, 0, "b");
-//        }
-//
-//        if (frameData != null && (bool) (frameData.Response) == interfaceState) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    public boolean doInterfaceConfig(boolean interfaceState) {
+        FrameData frameData;
+        if (interfaceState) {
+            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_IF_UP, 1, PropertyFormat.b);
+        } else {
+            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_IF_UP, 0, PropertyFormat.b);
+        }
+        return frameData != null && (boolean) (frameData.getResponse()) == interfaceState;
+    }
 
     public boolean doThread() {
         FrameData frameData = propertyGetValue(SpinelProperties.SPINEL_PROP_NET_STACK_UP);
@@ -306,21 +294,16 @@ public class WpanApi {
         }
     }
 
-//    public boolean doThread(boolean threadState) {
-//        FrameData frameData;
-//
-//        if (threadState) {
-//            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_STACK_UP, 1, "b");
-//        } else {
-//            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_STACK_UP, 0, "b");
-//        }
-//
-//        if (frameData != null && (boolean) (frameData.getResponse()) == threadState) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    public boolean doThread(boolean threadState) {
+        FrameData frameData;
+
+        if (threadState) {
+            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_STACK_UP, 1, PropertyFormat.b);
+        } else {
+            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_STACK_UP, 0, PropertyFormat.b);
+        }
+        return frameData != null && (boolean) (frameData.getResponse()) == threadState;
+    }
 
     public byte[] doMasterkey() {
         FrameData frameData = propertyGetValue(SpinelProperties.SPINEL_PROP_NET_MASTER_KEY);
@@ -350,17 +333,17 @@ public class WpanApi {
         propertySetValue(SpinelProperties.SPINEL_PROP_MAC_SCAN_STATE, scanState, PropertyFormat.C);
     }
 
-//    public boolean doProperty_NET_REQUIRE_JOIN_EXISTING(boolean state) {
-//        FrameData frameData;
-//
-//        if (state) {
-//            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_REQUIRE_JOIN_EXISTING, 1, "b");
-//        } else {
-//            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_REQUIRE_JOIN_EXISTING, 0, "b");
-//        }
-//
-//        return frameData != null && (boolean) (frameData.getResponse()) == state;
-//    }
+    public boolean doProperty_NET_REQUIRE_JOIN_EXISTING(boolean state) {
+        FrameData frameData;
+
+        if (state) {
+            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_REQUIRE_JOIN_EXISTING, 1, PropertyFormat.b);
+        } else {
+            frameData = propertySetValue(SpinelProperties.SPINEL_PROP_NET_REQUIRE_JOIN_EXISTING, 0, PropertyFormat.b);
+        }
+
+        return frameData != null && (boolean) (frameData.getResponse()) == state;
+    }
 
 //    public void doSendData(byte[] frame) {
 //        doSendData(frame, true);
