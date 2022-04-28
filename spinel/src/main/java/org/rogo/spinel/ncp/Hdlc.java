@@ -49,12 +49,26 @@ public class Hdlc {
     }
 
     private byte[] frameEncoder(byte[] frameIn) {
+        int counter = 0;
+        for (byte value : frameIn) {
+            if (value != 0) {
+                counter++;
+            }
+        }
+        byte[] bytes = new byte[counter];
+        counter = 0;
+        for (byte b : frameIn) {
+            if (b != 0) {
+                bytes[counter++] = b;
+            }
+        }
+
         ArrayList<Byte> frameEncoded = new ArrayList<>();
         this.fcs = HdlcCrcResetValue;
 
         frameEncoded.add(HdlcByteFlag);
 
-        for (byte frameByte : frameIn) {
+        for (byte frameByte : bytes) {
             fcs = fcs16(frameByte, fcs);
             encodeByte(frameByte, frameEncoded);
         }
@@ -72,11 +86,11 @@ public class Hdlc {
 
         frameEncoded.add(HdlcByteFlag);
 
-        final byte[] bytes = new byte[frameEncoded.size()];
+        final byte[] bytesResponse = new byte[frameEncoded.size()];
         for (int i = 0; i < frameEncoded.size(); i++) {
-            bytes[i] = frameEncoded.get(i);
+            bytesResponse[i] = frameEncoded.get(i);
         }
-        return bytes;
+        return bytesResponse;
     }
 
     private byte[] frameDecoder() {
