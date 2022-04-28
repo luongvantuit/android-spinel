@@ -19,11 +19,27 @@ public final class ByteUtils {
     }
 
     public static byte[] intToBytes(int value) {
-        return new byte[]{
+        final byte[] bytes=  new byte[]{
                 (byte) (value >> 24),
                 (byte) (value >> 16),
                 (byte) (value >> 8),
                 (byte) value};
+        int counter = 0;
+        for (int i = 0; i < bytes.length -1 ; i++) {
+            if (bytes[i] != 0) {
+                counter++;
+            }
+        }
+        byte[] bytesResponse = new byte[counter + 1];
+        counter = 0;
+        for (int i = 0; i < bytes.length -1 ; i++) {
+            if (bytes[i] != 0) {
+                bytesResponse[counter++] = bytes[i];
+            }
+        }
+        bytesResponse[bytesResponse.length -1] = bytes[bytes.length -1];
+        return bytesResponse;
+
     }
 
     public static byte[] shortToBytes(int value) {
