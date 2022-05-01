@@ -6,17 +6,15 @@ import org.rogo.spinel.interfaces.IStream;
 
 public class Spinel {
 
+    public final static String ACTION_REQUEST_PERMISSION_USB_ACCESSORY = "com.android.spinel.USB_PERMISSION";
 
     /**
      * Initialization variable
      */
     private final static String TAG = Spinel.class.getSimpleName();
 
+    private final WpanApi wpanApi;
 
-    /**
-     * Option custom logger
-     */
-    private ILogger logger;
 
     /**
      * Requirement variable
@@ -24,11 +22,13 @@ public class Spinel {
     private final IStream stream;
 
     public Spinel(IStream stream) {
-        this(stream, SpinelLogger.getInstance());
+        this.stream = stream;
+        this.wpanApi = new WpanApi(stream);
+        SpinelLogger.getInstance().debug(TAG, "Initialization class");
     }
 
-    public Spinel(IStream stream, ILogger logger) {
-        this.stream = stream;
-        logger.debug(TAG, "Initialization class");
+
+    public WpanApi getWpanApi() {
+        return wpanApi;
     }
 }

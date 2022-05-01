@@ -81,6 +81,7 @@ public class Hdlc {
         return bytesResponse;
     }
 
+    // Edit Frame Decoder
     private byte[] frameDecoder() {
         ArrayList<Byte> frameDecoded = new ArrayList<>();
         fcs = HdlcCrcResetValue;
@@ -97,10 +98,8 @@ public class Hdlc {
                 break;
             }
         }
-
         while (true) {
             byte frameByte = stream.readByte();
-
             if (frameByte == HdlcByteFlag) {
                 if (frameDecoded.size() != 0) {
                     break;
@@ -108,12 +107,10 @@ public class Hdlc {
                     continue;
                 }
             }
-
             if (frameByte == HdlcByteESC) {
                 frameByte = stream.readByte();
                 frameByte ^= 0x20;
             }
-
             frameDecoded.add(frameByte);
             fcs = fcs16(frameByte, fcs);
         }
@@ -121,9 +118,6 @@ public class Hdlc {
         if (fcs != HdlcCrcCheckValue) {
             throw new RuntimeException();
         }
-
-        //frameDecoded.RemoveRange(frameDecoded.Count - 2, 2);
-        //remove last 2 bytes
         frameDecoded.remove(frameDecoded.size() - 1);
         frameDecoded.remove(frameDecoded.size() - 1);
 

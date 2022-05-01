@@ -1,27 +1,21 @@
 package org.rogo.spinel.interfaces;
 
+import android.content.Context;
+
 /**
  * IStream template stream
  */
-public abstract class IStream {
+public interface IStream {
 
-    private boolean isDataAvailable;
+    void open(Context context);
 
-    public abstract void open();
+    void write(byte[] buffer);
 
-    public abstract void write(byte[] buffer);
+    public byte[] read();
 
-    public abstract byte[] read();
+    byte readByte();
 
-    public abstract byte readByte();
+    void close();
 
-    public abstract void close();
-
-    public boolean getIsDataAvailable() {
-        return isDataAvailable;
-    }
-
-    public void setIsDataAvailable(boolean dataAvailable) {
-        isDataAvailable = dataAvailable;
-    }
+    boolean getIsDataAvailable();
 }

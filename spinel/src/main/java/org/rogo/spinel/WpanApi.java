@@ -1,6 +1,9 @@
 package org.rogo.spinel;
 
+import android.content.Context;
+
 import org.rogo.spinel.helpers.ByteUtils;
+import org.rogo.spinel.helpers.SpinelLogger;
 import org.rogo.spinel.helpers.Utilities;
 import org.rogo.spinel.interfaces.ISpinelFrameDataCallBack;
 import org.rogo.spinel.interfaces.IStream;
@@ -20,6 +23,8 @@ import java.util.Queue;
 
 public class WpanApi {
 
+    private final static String TAG = WpanApi.class.getSimpleName();
+
     private final byte SpinelHeaderFlag = ByteUtils.getUByte(0x80);
     private IStream stream;
     private Hdlc hdlcInterface;
@@ -33,8 +38,8 @@ public class WpanApi {
         this.hdlcInterface = new Hdlc(this.stream);
     }
 
-    public void open() {
-        this.stream.open();
+    public void open(Context context) {
+        this.stream.open(context);
     }
 
     public void doReset() {
@@ -462,11 +467,27 @@ public class WpanApi {
         //     throw new SpinelProtocolExceptions("Timeout for sync packet " + commandId);
         // }
 
+//        try {
+//            Thread.sleep(155000);
+//        } catch (InterruptedException e) {
+//            SpinelLogger.getInstance().error(TAG, e.getMessage());
+//        }
+
+        int counter = 0;
+
+        while (counter++ < 1500 || waitingQueue.size() == 0) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                SpinelLogger.getInstance().error(TAG, e.getMessage());
+            }
+        }
+
         if (waitingQueue.size() > 0) {
             while (waitingQueue.size() != 0) {
                 FrameData frameData = (FrameData) waitingQueue.poll();
 
-                if (frameData.getUid() == uid) {
+                if (frameData != null && frameData.getUid() == uid) {
                     responseFrame = frameData;
                     isSyncFrameExpecting = false;
                 } else {
