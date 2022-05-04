@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 
@@ -64,7 +65,10 @@ public class Spinel {
         return wpanApi;
     }
 
-    public static void requestPermission(Context context, UsbDevice usbDevice) {
+    public void requestPermission(Context context, UsbDevice usbDevice) {
+        SpinelBroadcastReceiver spinelBroadcastReceiver = new SpinelBroadcastReceiver();
+        IntentFilter filter = new IntentFilter(Spinel.ACTION_REQUEST_PERMISSION_USB_ACCESSORY);
+        context.registerReceiver(spinelBroadcastReceiver, filter);
         UsbManager usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(Spinel.ACTION_REQUEST_PERMISSION_USB_ACCESSORY), 0);
         usbManager.requestPermission(usbDevice, pendingIntent);
