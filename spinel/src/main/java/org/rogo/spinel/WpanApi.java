@@ -461,11 +461,11 @@ public class WpanApi {
             return null;
         }
 
-        //  receivedPacketWaitHandle.Reset();
-
-        // if (!receivedPacketWaitHandle.WaitOne(155000, false)) {
-        //     throw new SpinelProtocolExceptions("Timeout for sync packet " + commandId);
-        // }
+//          receivedPacketWaitHandle.Reset();
+//
+//         if (!receivedPacketWaitHandle.WaitOne(155000, false)) {
+//             throw new SpinelProtocolExceptions("Timeout for sync packet " + commandId);
+//         }
 
 //        try {
 //            Thread.sleep(155000);
@@ -473,15 +473,15 @@ public class WpanApi {
 //            SpinelLogger.getInstance().error(TAG, e.getMessage());
 //        }
 
-        int counter = 0;
-
-        while (counter++ < 1500 || waitingQueue.size() == 0) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                SpinelLogger.getInstance().error(TAG, e.getMessage());
-            }
-        }
+//        int counter = 0;
+//
+//        while (counter++ < 1500 || waitingQueue.size() == 0) {
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException e) {
+//                SpinelLogger.getInstance().error(TAG, e.getMessage());
+//            }
+//        }
 
         if (waitingQueue.size() > 0) {
             while (waitingQueue.size() != 0) {
